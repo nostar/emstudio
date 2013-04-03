@@ -83,7 +83,8 @@ SOURCES += src/main.cpp\
     src/configblock.cpp \
     src/emsdata.cpp \
     src/memorymetadata.cpp \
-    src/tablewidgetdelegate.cpp
+    src/tablewidgetdelegate.cpp \
+    src/parameterview.cpp
 
 
 HEADERS  += src/mainwindow.h \
@@ -125,7 +126,8 @@ HEADERS  += src/mainwindow.h \
     src/memorymetadata.h \
     src/tablewidgetdelegate.h \
     src/emscomms.h \
-    src/datapacketdecoder.h
+    src/datapacketdecoder.h \
+    src/parameterview.h
 
 FORMS    += src/mainwindow.ui \
     src/comsettings.ui \
@@ -142,7 +144,8 @@ FORMS    += src/mainwindow.ui \
     src/interrogateprogressview.ui \
     src/readonlyramview.ui \
     src/emsstatus.ui \
-    src/configview.ui
+    src/configview.ui \
+    src/parameterview.ui
 SUBDIRS += plugins
 OTHER_FILES += \
     README.md

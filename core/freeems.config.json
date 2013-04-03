@@ -239,6 +239,71 @@
   "editable" : "false"
  }
 },
+"newconfig" : {
+  "group1" : {
+    "title" : "Scheduler Settings",
+    "values" : 
+    [
+    {
+      "name" : "anglesOfTDC",
+      "locationid" : "0xC003",
+      "type" : "array",
+      "sizeofelement":"2",
+      "size" : "48",
+      "offset" : "0",
+      "calc" : [{ "type":"div","value" : "50.0" }],
+      "sizeoverride" : "numberOfConfiguredOutputEvents"
+    },
+    {
+      "name" : "outputEventPinNumbers",
+      "locationid" : "0xC003",
+      "type" : "array",
+      "sizeofelement":"1",
+      "size" : "24",
+      "offset" : "48",
+      "calc" : [],
+      "sizeoverride" : "numberOfConfiguredOutputEvents"
+    },
+    {
+      "name" : "schedulingConfigurationBits",
+      "locationid" : "0xC003",
+      "type" : "array",
+      "sizeofelement":"1",
+      "size" : "24",
+      "offset" : "72",
+      "calc" : [],
+      "sizeoverride" : "numberOfConfiguredOutputEvents"
+    },
+    {
+      "name" : "decoderEngineOffset",
+      "locationid" : "0xC003",
+      "type" : "value",
+      "sizeofelement":"2",
+      "size" : "2",
+      "offset" : "96",
+      "calc" : [{ "type":"div","value" : "50.0" }]
+    },
+    {
+      "name" : "numberOfConfiguredOutputEvents",
+      "locationid" : "0xC003",
+      "type" : "value",
+      "sizeofelement":"1",
+      "size" : "1",
+      "offset" : "98",
+      "calc" : [ ]
+    },
+    {
+      "name" : "numberOfInjectionsPerEngineCycle",
+      "locationid" : "0xC003",
+      "type" : "value",
+      "sizeofelement":"1",
+      "size" : "1",
+      "offset" : "99",
+      "calc" : [ ]
+    }
+    ]
+ }
+},
 "config" : {
  "0xC003" : {
   "title" : "Scheduler Settings",

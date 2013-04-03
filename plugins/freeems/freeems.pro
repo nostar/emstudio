@@ -34,6 +34,7 @@ HEADERS += ../../core/src/datapacketdecoder.h \
 	   ../../core/src/emscomms.h \
 	   ../../core/src/datafield.h \
 	   ../../core/src/memorymetadata.h \
+../../core/src/configblock.h \
            fetable3ddata.h \
            freeemscomms.h \
            serialport.h \

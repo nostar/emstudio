@@ -24,7 +24,7 @@
 #include <QPair>
 #include <QList>
 #include <QString>
-
+#include <QVariantMap>
 
 #define define2string_p(x) #x
 #define define2string(x) define2string_p(x)
@@ -64,7 +64,50 @@ public:
 	QString type;
 	unsigned char arraySize;
 };
+class SubMenuItem
+{
+public:
+	QString variable;
+	QString title;
+	QString parent;
+	QString var;
+	QString param;
+	QString condition;
+	bool is_seperator;
+};
 
+class MenuItem
+{
+public:
+	QString title;
+	QString condition;
+	QList<SubMenuItem> subMenuList;
+};
+class DialogField
+{
+public:
+	QString title; //Display name
+	QString variable; //Ram variable it edits
+	QString condition; //Condition on it being editable/displayed
+};
+
+class DialogItem
+{
+public:
+	QString title; //Display name
+	QString variable; //What a menu item points to
+	QList<DialogField> fieldList;
+};
+
+class MenuSetup
+{
+public:
+	QList<MenuItem> menulist;
+	//QList<QPair<QString,QList<QString> > > menulist;
+	//QMap<QString,QString> menunamemap;
+	//QMap<QString,QList<QPair<QString,QString> > > dialogmap;
+	QList<DialogItem> dialoglist;
+};
 
 class ReadOnlyRamData
 {

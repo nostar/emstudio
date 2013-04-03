@@ -50,10 +50,17 @@ public:
 	const QMap<unsigned short,LookupMetaData> lookupMetaData() { return m_lookupMetaData; }
 	const LookupMetaData getLookupMetaData(unsigned short locationid);
 
+	bool hasConfigMetaData(QString name);
+	const QMap<QString,QList<ConfigBlock> > configMetaData();
+	const QList<ConfigBlock> getConfigMetaData(QString name);
+
+	const MenuSetup menuMetaData() { return m_menuSetup; }
+
 	const QString getErrorString(unsigned short code);
 
 private:
-
+	MenuSetup m_menuSetup;
+	QMap<QString,QList<ConfigBlock> > m_configMetaData;
 	QMap<unsigned short,QString> m_errorMap;
 	QMap<unsigned short,LookupMetaData> m_lookupMetaData;
 	QList<ReadOnlyRamData> m_readOnlyMetaData;

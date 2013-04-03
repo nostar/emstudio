@@ -26,7 +26,7 @@
 #include <qjson/parser.h>
 //#include <QMessageBox>
 #include <QVariant>
-
+#include "configblock.h"
 FEMemoryMetaData::FEMemoryMetaData()
 {
 }
@@ -140,6 +140,54 @@ bool FEMemoryMetaData::parseMetaData(QString json)
   "editable" : "false"
  }
 }*/
+
+	QVariantMap newconfig = topmap["newconfig"].toMap();
+	i = newconfig.begin();
+
+	while (i != newconfig.end())
+	{
+		MenuItem menuitem;
+		QString newconfigkey = i.key();
+		QVariantMap newconfigmap = i.value().toMap();
+		QString newconfigtitle = newconfigmap["title"].toString();
+		QVariantList valueslist = newconfigmap["values"].toList();
+		QList<ConfigBlock> blocklist;
+		menuitem.title = newconfigtitle;
+		for (int j=0;j<valueslist.size();j++)
+		{
+			SubMenuItem submenu;
+			QVariantMap tmpmap = valueslist[j].toMap();
+			ConfigBlock block;
+			QString str = tmpmap["locationid"].toString();
+			bool ok = false;
+			unsigned short locid = str.toInt(&ok,16);
+			block.setLocationId(locid);
+			block.setName(tmpmap["name"].toString());
+			block.setType(tmpmap["type"].toString());
+			block.setElementSize(tmpmap["sizeofelement"].toInt());
+			block.setSize(tmpmap["size"].toInt());
+			block.setOffset(tmpmap["offset"].toInt());
+			block.setSizeOverride(tmpmap["sizeoverride"].toString());
+			block.setSizeOverrideMult(tmpmap["sizeoverridemult"].toDouble());
+			QList<QPair<QString, double> > calclist;
+			QVariantList calcliststr = tmpmap["calc"].toList();
+			for (int k=0;k<calcliststr.size();k++)
+			{
+				qDebug() << "XCalc:" << calcliststr[k].toMap()["type"].toString() << calcliststr[k].toMap()["value"].toDouble();
+				calclist.append(QPair<QString,double>(calcliststr[k].toMap()["type"].toString(),calcliststr[k].toMap()["value"].toDouble()));
+			}
+			block.setCalc(calclist);
+			blocklist.append(block);
+			submenu.title = block.name();
+			submenu.variable = block.name();
+			submenu.is_seperator = false;
+			submenu.parent = newconfigtitle;
+			menuitem.subMenuList.append(submenu);
+		}
+		m_configMetaData[newconfigtitle] = blocklist;
+		i++;
+		m_menuSetup.menulist.append(menuitem);
+	}
 	QVariantMap lookups = topmap["lookuptables"].toMap();
 	i = lookups.begin();
 	while (i != lookups.end())
@@ -266,6 +314,27 @@ bool FEMemoryMetaData::parseMetaData(QString json)
 		i++;
 	}
 	return true;
+}
+bool FEMemoryMetaData::hasConfigMetaData(QString name)
+{
+	return m_configMetaData.contains(name);
+}
+
+const QMap<QString,QList<ConfigBlock> > FEMemoryMetaData::configMetaData()
+{
+	return m_configMetaData;
+}
+
+const QList<ConfigBlock> FEMemoryMetaData::getConfigMetaData(QString name)
+{
+	if (m_configMetaData.contains(name))
+	{
+		return m_configMetaData[name];
+	}
+	else
+	{
+		return QList<ConfigBlock>();
+	}
 }
 
 bool FEMemoryMetaData::loadMetaDataFromFile(QString filestr)

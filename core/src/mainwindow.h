@@ -50,6 +50,7 @@
 #include "readonlyramview.h"
 #include "emsstatus.h"
 #include "tablemap3d.h"
+#include "parameterview.h"
 //#include "datarawview.h"
 #include <QPluginLoader>
 
@@ -132,6 +133,9 @@ private:
 	QMdiSubWindow *packetStatusMdiWindow;
 	QMdiSubWindow *aboutMdiWindow;
 	QMdiSubWindow *emsStatusMdiWindow;
+
+	ParameterView *parameterView;
+	QMdiSubWindow *parameterMdiWindow;
 	//QFile *settingsFile;
 	void checkMessageCounters(int sequencenumber);
 	//QMdiSubWindow *rawMdiWindow;

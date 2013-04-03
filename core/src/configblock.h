@@ -27,8 +27,23 @@
 class ConfigBlock
 {
 public:
-	ConfigBlock();
-	ConfigBlock(QString name,QString type, QString override,unsigned short locationid, unsigned short size,unsigned short elementsize,unsigned short offset, QList<QPair<QString,double> > calc);
+	//ConfigBlock();
+	//ConfigBlock(QString name,QString type, QString override,unsigned short locationid, unsigned short size,unsigned short elementsize,unsigned short offset, QList<QPair<QString,double> > calc);
+	ConfigBlock()
+	{
+	}
+	ConfigBlock(QString name,QString type,QString override,unsigned short locationid, unsigned short size,unsigned short elementsize,unsigned short offset, QList<QPair<QString,double> > calc)
+	{
+		m_name = name;
+		m_type = type;
+		m_sizeOverride = override;
+		m_locationId = locationid;
+		m_size = size;
+		m_elementSize = elementsize;
+		m_offset = offset;
+		m_calc = calc;
+	}
+
 	void setName(QString name) { m_name = name; }
 	void setType(QString type) { m_type = type; }
 	void setSizeOverride(QString override) { m_sizeOverride = override; }
@@ -38,15 +53,15 @@ public:
 	void setElementSize(unsigned short size) { m_elementSize = size; }
 	void setOffset(unsigned short offset) { m_offset = offset; }
 	void setCalc(QList<QPair<QString,double> > calc) { m_calc = calc; }
-	QString name() { return m_name; }
-	QString type() { return m_type; }
-	QString sizeOverride() { return m_sizeOverride; }
+	QString name() const { return m_name; }
+	QString type() const { return m_type; }
+	QString sizeOverride() const { return m_sizeOverride; }
 	double sizeOverrideMult() { return m_sizeOverrideMult; }
 	unsigned short locationId() { return m_locationId; }
 	unsigned short offset() { return m_offset; }
 	unsigned short size() { return m_size; }
 	unsigned short elementSize() { return m_elementSize; }
-	QList<QPair<QString,double> > calc() { return m_calc; }
+	const QList<QPair<QString,double> > calc() { return m_calc; }
 private:
 	QString m_name;
 	QString m_type;

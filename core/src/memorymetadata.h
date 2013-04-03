@@ -53,6 +53,7 @@
 #include <QString>
 #include <QMap>
 #include "headers.h"
+#include "configblock.h"
 class MemoryMetaData
 {
 public:
@@ -76,6 +77,14 @@ public:
 	virtual bool hasLookupMetaData(unsigned short locationid)=0;
 	virtual const QMap<unsigned short,LookupMetaData> lookupMetaData()=0;
 	virtual const LookupMetaData getLookupMetaData(unsigned short locationid)=0;
+
+	virtual bool hasConfigMetaData(QString name)=0;
+	virtual const QMap<QString,QList<ConfigBlock> > configMetaData()=0;
+	virtual const QList<ConfigBlock> getConfigMetaData(QString name)=0;
+
+	virtual const MenuSetup menuMetaData()=0;
+
+
 
 	virtual const QString getErrorString(unsigned short code)=0;
 };

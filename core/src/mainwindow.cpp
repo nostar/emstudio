@@ -278,6 +278,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 	emsMdiWindow->hide();
 	emsMdiWindow->setWindowTitle(emsInfo->windowTitle());
 
+
+	parameterView = new ParameterView();
+
+
+	parameterMdiWindow = ui.mdiArea->addSubWindow(parameterView);
+	parameterMdiWindow->setGeometry(parameterView->geometry());
+	parameterMdiWindow->show();
+	parameterMdiWindow->setWindowTitle(parameterView->windowTitle());
+
 	aboutView = new AboutView();
 	aboutView->setHash(define2string(GIT_HASH));
 	aboutView->setCommit(define2string(GIT_COMMIT));
@@ -888,6 +897,8 @@ void MainWindow::setPlugin(QString plugin)
 	}
 	m_memoryMetaData = emsComms->getMetaParser();
 	m_memoryMetaData->loadMetaDataFromFile(filestr);
+	parameterView->passConfigBlockList(m_memoryMetaData->configMetaData());
+	parameterView->passMenuList(m_memoryMetaData->menuMetaData());
 	emsData->setMetaData(m_memoryMetaData);
 	qDebug() << m_memoryMetaData->errorMap().keys().size() << "Error Keys Loaded";
 	qDebug() << m_memoryMetaData->table3DMetaData().size() << "3D Tables Loaded";
@@ -2095,7 +2106,7 @@ void MainWindow::checkMessageCounters(int sequencenumber)
 	if (m_locIdInfoMsgList.contains(sequencenumber))
 	{
 		m_locIdInfoMsgList.removeOne(sequencenumber);
-		if (m_locIdInfoMsgList.size() == 0)
+		if (m_locIdInfoMsgList.size() == 0) //End of interrogation!
 		{
 			if (m_offlineMode && m_checkEmsDataInUse)
 			{
@@ -2171,7 +2182,7 @@ void MainWindow::checkMessageCounters(int sequencenumber)
 	if (m_locIdMsgList.contains(sequencenumber))
 	{
 		m_locIdMsgList.removeOne(sequencenumber);
-		if (m_locIdMsgList.size() == 0)
+		if (m_locIdMsgList.size() == 0) //End of locationid information updates
 		{
 			qDebug() << "All ID information recieved. Requesting Ram and Flash updates";
 			populateParentLists();
