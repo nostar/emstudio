@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QScrollArea>
+#include <parameterwidget.h>
 ParameterView::ParameterView(QWidget *parent) : QWidget(parent)
 {
 	ui.setupUi(this);
@@ -78,12 +79,8 @@ void ParameterView::currentItemChanged(QTreeWidgetItem *current,QTreeWidgetItem 
 }
 void ParameterView::generateDialog(QString title,QList<DialogField> fieldlist)
 {
-	QWidget *widget = new QWidget();
-	QScrollArea *area = new QScrollArea();
-	QWidget *childwidget = new QWidget();
-	childwidget->setLayout(new QVBoxLayout());
-	widgetToFieldMap[widget] = QList<DialogField>();
-	widgetToFieldMap[widget].append(fieldlist);
+	ParameterWidget *widget = new ParameterWidget();
+	widget->show();
 	for (int i=0;i<fieldlist.size();i++)
 	{
 		qDebug() << "Field:" << fieldlist[i].title << fieldlist[i].variable;
@@ -92,36 +89,14 @@ void ParameterView::generateDialog(QString title,QList<DialogField> fieldlist)
 			//qDebug() << "Config block:" << m_memoryConfigBlockList[j].type();
 			if (m_memoryConfigBlockList[j].name() == fieldlist[i].variable)
 			{
+				widget->addParam(title,fieldlist[i],m_memoryConfigBlockList[j]);
 				qDebug() << "Found config block:" << m_memoryConfigBlockList[j].type();
 				qDebug() << m_memoryConfigBlockList[j].name() << j;
 				//This is the config block.
-				if (m_memoryConfigBlockList[j].type() == "scalar")
-				{
-					QHBoxLayout *layout = new QHBoxLayout();
-					QLabel *label = new QLabel(childwidget);
-					label->show();
-					label->setText(fieldlist[i].title);
-					layout->addWidget(label);
-					QLineEdit *edit = new QLineEdit(childwidget);
-					edit->show();
-					layout->addWidget(edit);
-					childwidget->layout()->addItem(layout);
-					lineEditToConfigBlockMap[edit] = m_memoryConfigBlockList[j];
-				}
 			}
 		}
 		//fieldlist[i].condition
 	}
-	area->setWidget(childwidget);
-	widget->setWindowTitle(title);
-	childwidget->show();
-	area->show();
-
-	widget->setLayout(new QVBoxLayout());
-	widget->layout()->addWidget(area);
-	widget->setGeometry(0,0,800,600);
-	widget->show();
-	updateValues();
 }
 void ParameterView::updateValues()
 {

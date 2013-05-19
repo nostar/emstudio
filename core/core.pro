@@ -84,7 +84,8 @@ SOURCES += src/main.cpp\
     src/emsdata.cpp \
     src/memorymetadata.cpp \
     src/tablewidgetdelegate.cpp \
-    src/parameterview.cpp
+    src/parameterview.cpp \
+    src/parameterwidget.cpp
 
 
 HEADERS  += src/mainwindow.h \
@@ -127,7 +128,8 @@ HEADERS  += src/mainwindow.h \
     src/tablewidgetdelegate.h \
     src/emscomms.h \
     src/datapacketdecoder.h \
-    src/parameterview.h
+    src/parameterview.h \
+    src/parameterwidget.h
 
 FORMS    += src/mainwindow.ui \
     src/comsettings.ui \

@@ -20,7 +20,7 @@ public:
 	double calcAxis(unsigned short val,QList<QPair<QString,double> > metadata);
 private:
 	QMap<QLineEdit*,ConfigBlock> lineEditToConfigBlockMap;
-	QMap<QWidget*,QList<DialogField> widgetToFieldMap;
+	QMap<QWidget*,QList<DialogField> > widgetToFieldMap;
 	EmsData *m_emsData;
 	MenuSetup m_metaMenu;
 	QList<ConfigBlock> m_memoryConfigBlockList;
