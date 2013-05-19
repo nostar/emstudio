@@ -617,7 +617,7 @@ void EmsData::ramBlockUpdate(unsigned short locationid, QByteArray header, QByte
 
 void EmsData::flashBlockUpdate(unsigned short locationid, QByteArray header, QByteArray payload)
 {
-	qDebug() << "Flash Block retrieved:" << "0x" + QString::number(locationid,16).toUpper();
+	qDebug() << "Flash Block retrieved:" << "0x" + QString::number(locationid,16).toUpper() << payload.size() << "bytes";
 	Q_UNUSED(header)
 	if (!verifyMemoryBlock(locationid,header,payload))
 	{

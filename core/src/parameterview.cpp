@@ -2,12 +2,14 @@
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QLabel>
-#include <QTextEdit>
+#include <QLineEdit>
+#include <QScrollArea>
 ParameterView::ParameterView(QWidget *parent) : QWidget(parent)
 {
 	ui.setupUi(this);
 	connect(ui.parameterTreeWidget,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),this,SLOT(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
 	connect(ui.parameterTreeWidget,SIGNAL(itemSelectionChanged()),this,SLOT(itemSelectionChanged()));
+	m_emsData = 0;
 }
 void ParameterView::itemSelectionChanged()
 {
@@ -77,11 +79,11 @@ void ParameterView::currentItemChanged(QTreeWidgetItem *current,QTreeWidgetItem 
 void ParameterView::generateDialog(QString title,QList<DialogField> fieldlist)
 {
 	QWidget *widget = new QWidget();
-	widget->setGeometry(0,0,800,600);
-	widget->setWindowTitle(title);
-	Q_UNUSED(fieldlist);
-	widget->show();
-	widget->setLayout(new QVBoxLayout());
+	QScrollArea *area = new QScrollArea();
+	QWidget *childwidget = new QWidget();
+	childwidget->setLayout(new QVBoxLayout());
+	widgetToFieldMap[widget] = QList<DialogField>();
+	widgetToFieldMap[widget].append(fieldlist);
 	for (int i=0;i<fieldlist.size();i++)
 	{
 		qDebug() << "Field:" << fieldlist[i].title << fieldlist[i].variable;
@@ -96,19 +98,77 @@ void ParameterView::generateDialog(QString title,QList<DialogField> fieldlist)
 				if (m_memoryConfigBlockList[j].type() == "scalar")
 				{
 					QHBoxLayout *layout = new QHBoxLayout();
-					QLabel *label = new QLabel(widget);
+					QLabel *label = new QLabel(childwidget);
 					label->show();
 					label->setText(fieldlist[i].title);
 					layout->addWidget(label);
-					QTextEdit *edit = new QTextEdit(widget);
+					QLineEdit *edit = new QLineEdit(childwidget);
 					edit->show();
 					layout->addWidget(edit);
-					widget->layout()->addItem(layout);
+					childwidget->layout()->addItem(layout);
+					lineEditToConfigBlockMap[edit] = m_memoryConfigBlockList[j];
 				}
 			}
 		}
 		//fieldlist[i].condition
 	}
+	area->setWidget(childwidget);
+	widget->setWindowTitle(title);
+	childwidget->show();
+	area->show();
+
+	widget->setLayout(new QVBoxLayout());
+	widget->layout()->addWidget(area);
+	widget->setGeometry(0,0,800,600);
+	widget->show();
+	updateValues();
+}
+void ParameterView::updateValues()
+{
+	if (!m_emsData)
+	{
+		return;
+	}
+	for(QMap<QLineEdit*,ConfigBlock>::Iterator i=lineEditToConfigBlockMap.begin();i!=lineEditToConfigBlockMap.end();i++)
+	{
+		if (m_emsData->hasLocalFlashBlock(i.value().locationId()))
+		{
+			qDebug() << "Page:" << i.value().locationId();
+			qDebug() << "Offset:" << i.value().offset();
+			qDebug() << "Name:" << i.value().name();
+			QByteArray block = m_emsData->getLocalFlashBlock(i.value().locationId());
+			qDebug() << "Block size:" << block.size();
+			QString valstr = "";
+			for (int k=1;k<block.size();k++)
+			{
+				unsigned int val = (((unsigned char)block[k-1]) << 8) + ((unsigned char)block[k]);
+				if (val == 8000)
+				{
+					qDebug() << "Offset:" << k;
+				}
+			}
+			for (int k=0;k<i.value().size();k++)
+			{
+				unsigned int value = 0;
+				for (int j=0;j<i.value().elementSize();j++)
+				{
+					qDebug() << (unsigned char)block[i.value().offset() + (k * i.value().elementSize()) + j];
+					value += ((unsigned char)block[i.value().offset() + (k * i.value().elementSize()) + j]) << (8 * (i.value().elementSize() - (j+1)));
+				}
+				//userValue = (ecuValue + translate) * scale
+				valstr += QString::number(calcAxis(value,i.value().calc())) + ",";
+			}
+			valstr = valstr.mid(0,valstr.length()-1);
+			i.key()->setText(valstr);
+		}
+
+	}
+}
+
+void ParameterView::passEmsData(EmsData *data)
+{
+	m_emsData = data;
+	updateValues();
 }
 
 void ParameterView::passMenuList(MenuSetup menu)
@@ -148,3 +208,31 @@ void ParameterView::passConfigBlockList(QMap<QString,QList<ConfigBlock> > blockl
 	}
 }
 
+double ParameterView::calcAxis(unsigned short val,QList<QPair<QString,double> > metadata)
+{
+	if (metadata.size() == 0)
+	{
+		return val;
+	}
+	double newval = val;
+	for (int j=0;j<metadata.size();j++)
+	{
+		if (metadata[j].first == "add")
+		{
+			newval += metadata[j].second;
+		}
+		else if (metadata[j].first == "sub")
+		{
+			newval -= metadata[j].second;
+		}
+		else if (metadata[j].first == "mult")
+		{
+			newval *= metadata[j].second;
+		}
+		else if (metadata[j].first == "div")
+		{
+			newval /= metadata[j].second;
+		}
+	}
+	return newval;
+}

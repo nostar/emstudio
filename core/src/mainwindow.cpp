@@ -2233,6 +2233,7 @@ void MainWindow::checkMessageCounters(int sequencenumber)
 			}
 			//this->setEnabled(true);
 			qDebug() << "Interrogation complete";
+			parameterView->passEmsData(emsData);
 
 			emsData->setInterrogation(false);
 
