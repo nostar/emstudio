@@ -81,6 +81,7 @@ void ParameterView::generateDialog(QString title,QList<DialogField> fieldlist)
 {
 	ParameterWidget *widget = new ParameterWidget();
 	widget->show();
+	paramWidgetList.append(widget);
 	for (int i=0;i<fieldlist.size();i++)
 	{
 		qDebug() << "Field:" << fieldlist[i].title << fieldlist[i].variable;
@@ -93,6 +94,13 @@ void ParameterView::generateDialog(QString title,QList<DialogField> fieldlist)
 				qDebug() << "Found config block:" << m_memoryConfigBlockList[j].type();
 				qDebug() << m_memoryConfigBlockList[j].name() << j;
 				//This is the config block.
+				if (m_emsData)
+				{
+					if (m_emsData->hasLocalFlashBlock(m_memoryConfigBlockList[j].locationId()))
+					{
+						widget->updateValue(m_memoryConfigBlockList[j].locationId(),m_emsData->getLocalFlashBlock(m_memoryConfigBlockList[j].locationId()));
+					}
+				}
 			}
 		}
 		//fieldlist[i].condition
@@ -104,10 +112,23 @@ void ParameterView::updateValues()
 	{
 		return;
 	}
+	for (int i=0;i<paramWidgetList.size();i++)
+	{
+		QList<unsigned short> loclist = paramWidgetList[i]->getLocationIdList();
+		for (int k=0;k<loclist.size();k++)
+		{
+			if (m_emsData->hasLocalFlashBlock(loclist[k]))
+			{
+				paramWidgetList[i]->updateValue(loclist[k],m_emsData->getLocalFlashBlock(loclist[k]));
+			}
+		}
+	}
+	return;
 	for(QMap<QLineEdit*,ConfigBlock>::Iterator i=lineEditToConfigBlockMap.begin();i!=lineEditToConfigBlockMap.end();i++)
 	{
 		if (m_emsData->hasLocalFlashBlock(i.value().locationId()))
 		{
+
 			qDebug() << "Page:" << i.value().locationId();
 			qDebug() << "Offset:" << i.value().offset();
 			qDebug() << "Name:" << i.value().name();

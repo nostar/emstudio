@@ -6,7 +6,7 @@
 #include "ui_parameterview.h"
 #include "configblock.h"
 #include "emsdata.h"
-
+#include "parameterwidget.h"
 class ParameterView : public QWidget
 {
 	Q_OBJECT
@@ -19,6 +19,7 @@ public:
 	void updateValues();
 	double calcAxis(unsigned short val,QList<QPair<QString,double> > metadata);
 private:
+	QList<ParameterWidget*> paramWidgetList;
 	QMap<QLineEdit*,ConfigBlock> lineEditToConfigBlockMap;
 	QMap<QWidget*,QList<DialogField> > widgetToFieldMap;
 	EmsData *m_emsData;
