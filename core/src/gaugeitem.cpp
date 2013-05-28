@@ -79,9 +79,9 @@ GaugeItem::GaugeItem() : QDeclarativeItem()
 	dangerFontPen.setColor(QColor(255,0,0));
 	warningFontPen.setColor(QColor(255,255,0));
 	labelFont.setFamily("Ariel");
-	labelFont.setPixelSize(25);
+	labelFont.setPixelSize(20);
 	labelSmallFont.setFamily("Ariel");
-	labelSmallFont.setPixelSize(18);
+	labelSmallFont.setPixelSize(15);
 }
 /*void GaugeItem::resizeEvent (QResizeEvent *evt)
 {
@@ -482,11 +482,11 @@ void GaugeItem::drawBackground(QPainter *painter)
 		tmpPainter.setPen(QPen(QColor::fromRgb(255,255,255)));
 		tmpPainter.setBrush(Qt::SolidPattern);
 		QFont font = tmpPainter.font();
-		font.setPixelSize(30);
+		font.setPixelSize(15);
 		tmpPainter.setFont(font);
 		tmpPainter.translate(width()/2.0,height()/2.0);
 		tmpPainter.rotate(((_scaleStartAngle + _scaleEndAngle) / 2.0)+180);
-		tmpPainter.drawText(0 - (tmpPainter.fontMetrics().width(m_text)/2.0),0 + (internalHeight/4.0),m_text);
+		tmpPainter.drawText(0 - (tmpPainter.fontMetrics().width(m_text)/2.0),0 + (internalHeight/3.0),m_text);
 		tmpPainter.rotate(-1*(((_scaleStartAngle + _scaleEndAngle) / 2.0)+180));
 		tmpPainter.translate(-1*width()/2.0,-1*height()/2.0);
 

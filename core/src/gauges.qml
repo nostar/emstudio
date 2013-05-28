@@ -99,35 +99,6 @@ Rectangle {
 		m_value: (propertyMap["MAP"] ? propertyMap["MAP"] : 0)
 	}
 	Rectangle {
-		x:900
-		y:0
-		width:120
-		height:60
-		color:"grey"
-		property string propertyMapProperty:"IAT"
-		Rectangle {
-			x:5
-			y:5
-			width:110
-			height:50
-			color:"black"
-			Text {
-				x:0
-				y:35
-				font.pixelSize:13
-				color:"white"
-				text: "Intake Air Temp (C)"
-			}
-			Text {
-				x:10
-				y:3
-				font.pixelSize:30
-				color:"white"
-				text: Math.round(((propertyMap["IAT"] ? propertyMap["IAT"] : "0.0")*100))/100;
-			}
-		}
-	}
-	Rectangle {
 		x:0
 		y:600
 		width:300
@@ -143,7 +114,7 @@ Rectangle {
 			Text {
 				x:10
 				y:0
-				font.pixelSize:30
+				font.pixelSize:20
 				color:"white"
 				text: Math.round(((propertyMap["IAT"] ? propertyMap["IAT"] : "0.0")*100))/100;
 			}
